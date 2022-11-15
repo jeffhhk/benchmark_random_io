@@ -9,7 +9,15 @@ Example usage:
     racket test_random_reads_thread_parallel.rkt .../test_randio
 
 Example result:
-    '(((num-threads 1) (num-reads-per-thread 10000) (dt 1651)) ((num-threads 3) (num-reads-per-thread 10000) (dt 4666)) ((num-threads 6) (num-reads-per-thread 10000) (dt 9313)) ((num-threads 10) (num-reads-per-thread 10000) (dt 15479)) ((num-threads 19) (num-reads-per-thread 10000) (dt 29404)))
+    '(((num-threads 1) (num-reads-per-thread 10000) (dt 1651))
+      ((num-threads 3) (num-reads-per-thread 10000) (dt 4666))
+      ((num-threads 6) (num-reads-per-thread 10000) (dt 9313))
+      ((num-threads 10) (num-reads-per-thread 10000) (dt 15479))
+      ((num-threads 19) (num-reads-per-thread 10000) (dt 29404)))
+
+The required argument is a large file for testing.  See ensure_empty_file in benchmark_random_reads.py for how to create the file with dd.  File size will be detected by this program automatically with file-size.
+
+TODO: automatically invoke dd as in benchmark_random_reads.py
 
 |#
 
@@ -85,7 +93,6 @@ Example result:
 (define (run-each-benchmark ilist)
   ;; TODO: use the rough estimate to calibrate how much work
   ;; is run in each parallel thread
-  ;; TODO: compute combined reads/sec
   (for/list ((i ilist))
     (let* ((t0 (current-milliseconds))
            (_ (printf "about to run i=~a\n" i))

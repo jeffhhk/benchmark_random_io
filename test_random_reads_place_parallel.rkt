@@ -9,8 +9,9 @@ Example usage:
 
     racket test_random_reads_place_parallel.rkt .../test_randio
 
-Example result:
+The required argument is a large file for testing.  See ensure_empty_file in benchmark_random_reads.py for how to create the file with dd.  File size will be detected by this program automatically with file-size.
 
+TODO: automatically invoke dd as in benchmark_random_reads.py
 
 |#
 
@@ -91,7 +92,6 @@ Example result:
 (define (run-each-benchmark ilist)
   ;; TODO: use the rough estimate to calibrate how much work
   ;; is run in each parallel place
-  ;; TODO: compute combined reads/sec
   (printf "will run benchmarks: ~a\n" ilist)
   (for/list ((i ilist))
     (let* ((t0 (current-milliseconds))
@@ -112,10 +112,18 @@ Example result:
 The amount of time it takes for the places to quit in this program seems inaccurate.  Compare reads-per-sec for num-threads=1:
 
 test_random_reads_thread_parallel.rkt:
-    '(((num-threads 1) (num-reads-per-thread 10000) (reads-per-sec 6422) (dt 1557)) ((num-threads 3) (num-reads-per-thread 10000) (reads-per-sec 6468) (dt 4638)) ((num-threads 6) (num-reads-per-thread 10000) (reads-per-sec 6525) (dt 9194)) ((num-threads 10) (num-reads-per-thread 10000) (reads-per-sec 6482) (dt 15425)) ((num-threads 19) (num-reads-per-thread 10000) (reads-per-sec 6511) (dt 29178)))
+'(((num-threads 1) (num-reads-per-thread 10000) (reads-per-sec 6422) (dt 1557))
+ ((num-threads 3) (num-reads-per-thread 10000) (reads-per-sec 6468) (dt 4638))
+ ((num-threads 6) (num-reads-per-thread 10000) (reads-per-sec 6525) (dt 9194))
+ ((num-threads 10) (num-reads-per-thread 10000) (reads-per-sec 6482) (dt 15425))
+ ((num-threads 19) (num-reads-per-thread 10000) (reads-per-sec 6511) (dt 29178)))
 
 test_random_reads_place_parallel.rkt:
-    '(((num-threads 1) (num-reads-per-thread 10000) (reads-per-sec 31847) (dt 314)) ((num-threads 3) (num-reads-per-thread 10000) (reads-per-sec 48076) (dt 624)) ((num-threads 6) (num-reads-per-thread 10000) (reads-per-sec 62565) (dt 959)) ((num-threads 10) (num-reads-per-thread 10000) (reads-per-sec 68634) (dt 1457)) ((num-threads 19) (num-reads-per-thread 10000) (reads-per-sec 53490) (dt 3552)))
+'(((num-threads 1) (num-reads-per-thread 10000) (reads-per-sec 31847) (dt 314))
+ ((num-threads 3) (num-reads-per-thread 10000) (reads-per-sec 48076) (dt 624))
+ ((num-threads 6) (num-reads-per-thread 10000) (reads-per-sec 62565) (dt 959))
+ ((num-threads 10) (num-reads-per-thread 10000) (reads-per-sec 68634) (dt 1457))
+ ((num-threads 19) (num-reads-per-thread 10000) (reads-per-sec 53490) (dt 3552)))
 
 The machine used in both cases is the same.
 
