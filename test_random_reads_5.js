@@ -9,6 +9,7 @@ var usage = function() {
 }
 
 var run = function(numPhases, relf, iMax, done) {
+    var stat = fs.statSync(relf);
     var fds = Array(numPhases).fill('junk',0,numPhases).map(junk => {
         var fd = fs.openSync(relf,'r')
         // TODO handle file access errors
@@ -16,10 +17,10 @@ var run = function(numPhases, relf, iMax, done) {
         return [fd,buf];
     })
     var t0 = new Date();
-    return doreads(numPhases, fds, t0, iMax, done);
+    return doreads(numPhases, fds, t0, iMax, stat.size, done);
 }
 
-var doreads = function(numPhases, fds, t0, iMax, done) {
+var doreads = function(numPhases, fds, t0, iMax, iPosMax, done) {
     var numOut = 0
     var loop = function(i, j) {
         if(i <= 0) {
@@ -30,8 +31,8 @@ var doreads = function(numPhases, fds, t0, iMax, done) {
             // console.log({event:"unpacking", j})
             var fd = fds[j][0]
             var buf = fds[j][1]
-            var iPos = Math.floor(Math.random() * 107374182400); // TODO: measure file
-            // console.log({event:"fs.read", i, j, numOut})
+            var iPos = Math.floor(Math.random() * iPosMax);
+            // console.log({event:"fs.read", i, j, numOut, iPos})
             fs.read(fd, buf, 0, 1024, iPos, function(err, bytesRead, buf) {
                 numOut -= 1
                 if(numOut == 0) {
