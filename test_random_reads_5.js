@@ -19,7 +19,7 @@ var run = function(numPhases, relf, iMax, done) {
     return doreads(numPhases, fds, t0, iMax, done);
 }
 
-var doreads = function(numPhases, fds, t0, i, done) {
+var doreads = function(numPhases, fds, t0, iMax, done) {
     var numOut = 0
     var loop = function(i, j) {
         if(i <= 0) {
@@ -42,7 +42,7 @@ var doreads = function(numPhases, fds, t0, i, done) {
             return loop(i, j-1)
         }
     }
-    return loop(Math.round(i/numPhases), numPhases-1)
+    return loop(Math.round(iMax/numPhases), numPhases-1)
 }
 
 var parseArgs = function(argv) {
