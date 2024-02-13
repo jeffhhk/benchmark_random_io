@@ -1,7 +1,29 @@
+/*
+Demonstrate random io performance benefit of io_uring in libuv.
+    https://github.com/libuv/libuv/issues/1947
+
+Versions pertaining to where io_uring support was added:
+    https://github.com/libuv/libuv/commit/d2c31f429b87b476a7f1344d145dad4752a406d4
+         v1.48.0
+        …
+         v1.45.0
+        bnoordhuis committed on Apr 18, 2023
+    https://github.com/libuv/libuv/releases/tag/v1.45.0
+        v1.45.0: 2023.05.19, Version 1.45.0 (Stable)
+        @santigimeno santigimeno released this May 19, 2023
+        · 137 commits to v1.x since this release
+         v1.45.0
+         96e0554
+    https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V20.md#2023-06-08-version-2030-current-targos
+        2023-06-08, Version 20.3.0 (Current), @targos
+        Notable Changes
+        [bfcb3d1d9a] - deps: upgrade to libuv 1.45.0, including significant performance improvements to file system operations on Linux (Santiago Gimeno) #48078
+
+*/
+
 const fs = require("fs");
-const { Buffer } = require('node:buffer');
 const process = require('process')
-const { argv } = require('node:process');
+const { Buffer } = require('node:buffer');
 
 var usage = function() {
     console.log("*** usage ****");
@@ -58,12 +80,12 @@ var parseArgs = function(argv) {
     return [numPhases, relf]
 }
 
-if(argv.length <= 3) {
+if(process.argv.length <= 3) {
     usage()
     process.exit(1)
 } else {
     var iMax = 100000
-    var pargs = parseArgs(argv)
+    var pargs = parseArgs(process.argv)
     run(pargs[0], pargs[1], iMax, function(dt) {
         var iops = iMax/(dt/1000.0)
         console.log({event:"run completed", dt, iops})
