@@ -19,6 +19,18 @@ Versions pertaining to where io_uring support was added:
         Notable Changes
         [bfcb3d1d9a] - deps: upgrade to libuv 1.45.0, including significant performance improvements to file system operations on Linux (Santiago Gimeno) #48078
 
+Intended configuration is to use a file that is 2x larger than system RAM.  Measure your RAM and create the file with dd yourself.  E.g. for 16 GB system:
+
+    dd bs=$((1024*1024)) count=32000 if=/dev/zero of=test.tmp
+    node 10 test.tmp
+
+Example measurements on node 20.11.1:
+    2021 consumer SSD Ubuntu 20:
+        5x faster with 10 file handles than with 1 (31705 vs 6843)
+        10x faster with 100 file handles than with 1 (62932 vs 6843)
+    2014 macbook pro, macOS 10.14.6:
+        2.4x faster with 10 file handles than with 1 (7001 vs 2927).
+
 */
 
 const fs = require("fs");
